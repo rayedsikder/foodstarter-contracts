@@ -77,4 +77,34 @@ contract RecipeContract {
         require(msg.value > 0, "dont hack me bro");
         recipes[indexOfRecipe].fundRaisedSoFar += msg.value;
     }
+
+    function getRecipeIndexFromOwnerAddressAndRecipeName(
+        string memory recipeName,
+        address recipeOwnerAddress
+    ) public view returns (int256) {
+        for (uint256 i = 0; i < recipes.length; i++) {
+            if (
+                recipes[i].recipeOwnerAddress == recipeOwnerAddress &&
+                keccak256(abi.encodePacked(recipes[i].name)) ==
+                keccak256(abi.encodePacked(recipeName))
+            ) {
+                return int256(i);
+            }
+        }
+        return -1;
+    }
+
+    function withdrawFunding(string memory recipeName) public {
+        int256 recipeIndex = getRecipeIndexFromOwnerAddressAndRecipeName(
+            recipeName,
+            msg.sender
+        );
+        require(recipeIndex != -1, "Recipe not found or you are not the owner");
+
+        address payable recipient = payable(msg.sender);
+        uint256 amountToWithdraw = recipes[uint256(recipeIndex)].fundAmount;
+
+        (bool sent, ) = recipient.call{value: amountToWithdraw}("");
+        require(sent, "Failed to send Ether");
+    }
 }
