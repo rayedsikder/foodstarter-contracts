@@ -11,6 +11,8 @@ contract RecipeContract {
         string name;
         string[] ingredients;
         uint256 fundAmount;
+        address recipeOwnerAddress;
+        uint256 fundRaisedSoFar;
         uint256 timeForFund;
         uint256[] rewardIndexes; // Store the indexes of rewards in the rewards array
     }
@@ -19,36 +21,19 @@ contract RecipeContract {
     Reward[] public rewards;
     mapping(string => uint256) public recipeNameToIndex;
 
-    // function createReward(
-    //     uint256 _fundAmount,
-    //     string memory _rewardDescription
-    // ) public {
-    //     Reward memory newReward;
-    //     newReward.fundAmount = _fundAmount;
-    //     newReward.rewardDescription = _rewardDescription;
-    //     rewards.push(newReward);
-    // }
-
     function createRecipe(
         string memory _name,
         string[] memory _ingredients,
         uint256 _fundAmount,
         uint256 _timeForFund
-    ) public // uint256[] memory _rewardIndexes
-    {
-        // require(_rewardIndexes.length > 0, "At least one reward is required");
-        // require(
-        //     _rewardIndexes[_rewardIndexes.length - 1] < rewards.length,
-        //     "Invalid reward index"
-        // );
+    ) public {
         recipeNameToIndex[_name] = recipes.length;
         Recipe memory newRecipe;
         newRecipe.name = _name;
         newRecipe.ingredients = _ingredients;
         newRecipe.fundAmount = _fundAmount;
         newRecipe.timeForFund = _timeForFund;
-        // newRecipe.rewardIndexes = _rewardIndexes;
-
+        newRecipe.recipeOwnerAddress = msg.sender;
         recipes.push(newRecipe);
     }
 
@@ -87,4 +72,9 @@ contract RecipeContract {
     //     fundAmount = reward.fundAmount;
     //     rewardDescription = reward.rewardDescription;
     // }
+
+    function sendFunding(uint256 indexOfRecipe) public payable {
+        require(msg.value > 0, "dont hack me bro");
+        recipes[indexOfRecipe].fundRaisedSoFar += msg.value;
+    }
 }
