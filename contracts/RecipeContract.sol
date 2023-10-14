@@ -12,7 +12,6 @@ contract RecipeContract {
         string[] ingredients;
         uint256 fundAmount;
         uint256 timeForFund;
-        uint256[] rewardIndexes; // Store the indexes of rewards in the rewards array
     }
 
     Recipe[] public recipes;
@@ -32,21 +31,14 @@ contract RecipeContract {
         string memory _name,
         string[] memory _ingredients,
         uint256 _fundAmount,
-        uint256 _timeForFund,
-        uint256[] memory _rewardIndexes
-    ) public {
-        require(_rewardIndexes.length > 0, "At least one reward is required");
-        require(
-            _rewardIndexes[_rewardIndexes.length - 1] < rewards.length,
-            "Invalid reward index"
-        );
-
+        uint256 _timeForFund
+    ) public // uint256[] memory _rewardIndexes
+    {
         Recipe memory newRecipe;
         newRecipe.name = _name;
         newRecipe.ingredients = _ingredients;
         newRecipe.fundAmount = _fundAmount;
         newRecipe.timeForFund = _timeForFund;
-        newRecipe.rewardIndexes = _rewardIndexes;
 
         recipes.push(newRecipe);
     }
@@ -60,8 +52,7 @@ contract RecipeContract {
             string memory name,
             string[] memory ingredients,
             uint256 fundAmount,
-            uint256 timeForFund,
-            uint256[] memory rewardIndexes
+            uint256 timeForFund
         )
     {
         require(recipeIndex < recipes.length, "Recipe does not exist");
@@ -70,7 +61,6 @@ contract RecipeContract {
         ingredients = recipe.ingredients;
         fundAmount = recipe.fundAmount;
         timeForFund = recipe.timeForFund;
-        rewardIndexes = recipe.rewardIndexes;
     }
 
     function getReward(
