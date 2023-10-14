@@ -14,6 +14,8 @@ contract RecipeContract {
 
     Recipe[] private recipes;
 
+    event RecipeCreated(string name);
+
     function createRecipe(
         string memory _name,
         string[] memory _ingredients,
@@ -29,6 +31,8 @@ contract RecipeContract {
         newRecipe.recipeOwnerAddress = msg.sender;
         newRecipe.fundRaisedSoFar = 0;
         recipes.push(newRecipe);
+
+        emit RecipeCreated(_name);
     }
 
     function getRecipe(
@@ -63,23 +67,21 @@ contract RecipeContract {
         recipes[indexOfRecipe].fundRaisedSoFar += msg.value;
     }
 
-    function withdrawFunding(uint256 indexOfRecipe) public payable {
-        require(indexOfRecipe < recipes.length, "Recipe does not exist");
+    function withdrawFunding(string memory _name) public {
+        uint256 recipeIndex = recipeIdx[_name];
+        require(recipeIndex < recipes.length, "Recipe does not exist");
 
-        Recipe memory recipe = recipes[indexOfRecipe];
-
+        Recipe storage recipe = recipes[recipeIndex];
         require(
             msg.sender == recipe.recipeOwnerAddress,
-            "You are not the owner of this recipe"
+            "Only the recipe owner can withdraw funds"
         );
-        require(
-            recipe.fundRaisedSoFar > 0,
-            "No funds available for withdrawal"
-        );
+        require(recipe.fundRaisedSoFar >= recipe.fundAmount, "Not enough fund");
 
         uint256 amountToWithdraw = recipe.fundRaisedSoFar;
-        recipe.fundRaisedSoFar = 0;
+        recipe.fundRaisedSoFar = 0; // Reset the raised funds to zero
 
-        payable(msg.sender).transfer(amountToWithdraw);
+        (bool success, ) = msg.sender.call{value: amountToWithdraw}("");
+        require(success, "Withdrawal failed");
     }
 }
