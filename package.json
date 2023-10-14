@@ -1,19 +1,11 @@
 {
-  "name": "foodstarter-contracts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.0",
+    "dotenv": "^16.1.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rayedsikder/foodstarter-contracts.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rayedsikder/foodstarter-contracts/issues"
-  },
-  "homepage": "https://github.com/rayedsikder/foodstarter-contracts#readme"
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "hardhat": "^2.17.0",
+    "ts-node": "^10.9.1"
+  }
 }
