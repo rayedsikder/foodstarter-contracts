@@ -17,7 +17,7 @@ contract RecipeContract {
 
     Recipe[] public recipes;
     Reward[] public rewards;
-    mapping (string => uint256) public recipeNameToIndex;
+    mapping(string => uint256) public recipeNameToIndex;
 
     // function createReward(
     //     uint256 _fundAmount,
@@ -34,8 +34,8 @@ contract RecipeContract {
         string[] memory _ingredients,
         uint256 _fundAmount,
         uint256 _timeForFund
-        // uint256[] memory _rewardIndexes
-    ) public {
+    ) public // uint256[] memory _rewardIndexes
+    {
         // require(_rewardIndexes.length > 0, "At least one reward is required");
         // require(
         //     _rewardIndexes[_rewardIndexes.length - 1] < rewards.length,
@@ -66,6 +66,7 @@ contract RecipeContract {
         )
     {
         require(recipeIndex < recipes.length, "Recipe does not exist");
+        require((recipeIndex == 0), "The index was not reset to 0 !");
         Recipe storage recipe = recipes[recipeIndex];
         name = recipe.name;
         ingredients = recipe.ingredients;
