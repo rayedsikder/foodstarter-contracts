@@ -8,7 +8,7 @@ contract RecipeContract {
         uint256 fundAmount;
         address recipeOwnerAddress;
         uint256 fundRaisedSoFar;
-        string timeForFund;
+        uint256 timeForFund;
     }
     mapping(string => uint256) private recipeIdx;
 
@@ -20,7 +20,7 @@ contract RecipeContract {
         string memory _name,
         string[] memory _ingredients,
         uint256 _fundAmount,
-        string memory _timeForFund
+        uint256 _timeForFund
     ) public {
         recipeIdx[_name] = recipes.length;
         Recipe memory newRecipe;
@@ -46,7 +46,7 @@ contract RecipeContract {
             uint256 fundAmount,
             address recipeOwnerAddress,
             uint256 fundRaisedSoFar,
-            string memory timeForFund
+            uint256 timeForFund
         )
     {
         uint256 recipeIndex = recipeIdx[_name];
